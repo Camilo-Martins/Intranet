@@ -143,7 +143,42 @@ const createUser = async (_, { input }, ctx) => {
   }
 };
 
+const disableUser = async (_, { id }, ctx) =>{
+  const {user} = ctx;
+
+  if (!user) {
+    throw new Error("Acción no permitida.");
+  }
+
+  // TODO agregar otros usuarios, coordinador y admin
+  if (user.rol !== "PRINCIPAL") {
+    throw new Error("No cuentas con los permisos.");
+  }
+
+  const activeUser = await User.findById(id);
+
+  if(!activeUser){
+    throw new Error("El usuario que intentas desactivar no existe.") 
+  }
+
+  activeUser.isActive =  !activeUser.isActive;
+
+  //TODO: Validar que no pueda desactivar a otros directores, coordinadordes o addmins.
+
+try {
+   await activeUser.save();
+   return activeUser;
+} catch (error) {
+  console.log(error)
+}
+
+
+}
+
+
+
 module.exports = {
   createUser,
   authUser,
+  disableUser
 };

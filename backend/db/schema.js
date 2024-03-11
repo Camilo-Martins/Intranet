@@ -124,7 +124,7 @@ const typeDefs = gql`
 
     #Mantenedor usuarios
     createUser(input:  UserInput): User
-
+    disableUser(id: ID): User
   }
 `;
 
