@@ -2,12 +2,12 @@ function calculateSalary(totalHours,  rol) {
   // ? El calculo del salario es:
   // ? (Total de horas * valor hora) + gratificación segun el rol
   // ? Directo 40% del salario, Coordinador 28% y Docente 20%
-  console.log(rol);
+ 
 
   let salary = 0;
   let hoursValue = 0;
 
-  console.log("hola");
+ 
 
   switch (rol) {
     case "PRINCIPAL":

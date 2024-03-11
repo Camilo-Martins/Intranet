@@ -2,7 +2,8 @@ const nodemailer = require("nodemailer");
 require("dotenv").config({ path: "variables.env" });
 
 const emailRegistro = async (datos) => {
-  const { emailRecovery, emailGenerated, name, token, password, rol } = datos;
+  const { email,  recoveryEmail, name, token, password, rol } = datos;
+  console.log(datos)
 
   const transport = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -13,20 +14,19 @@ const emailRegistro = async (datos) => {
     },
   });
 
-  console.log(rol);
 
   switch (rol) {
     case "STUDENT":
       // Correo para estudiantes
       await transport.sendMail({
         from: '"Intranet - Comunidad Educativa de Villa Dulce" <cuentas@uptask.com>',
-        to: emailRecovery,
+        to: recoveryEmail,
         subject: `Bienvenido ${name} a Intranet`,
         text: "Comprueba tu cuenta en UpTask",
         html: `<p>Hola: ${name}, por medio de este correo te enviamos tu usuario y contraseña</p>
         <p>Recuerda que no debes compartir estos datos con nadie. 
       <ul>
-        <li>  Email: ${emailGenerated} </li>
+        <li>  Email: ${ email} </li>
         <li>  Password: ${password} </li>
       </ul>
         <p>Si tu no creaste esta cuenta, puedes ignorar el mensaje</p>
@@ -37,13 +37,13 @@ const emailRegistro = async (datos) => {
       // Correo para estudiantes
       await transport.sendMail({
         from: '"Intranet - Comunidad Educativa de Villa Dulce" <cuentas@uptask.com>',
-        to: emailRecovery,
+        to: recoveryEmail,
         subject: `Bienvenido al equipo educativo ${name}, con este correo podrás acceder al intranet `,
         text: "Aquí tienes mas información",
         html: `<p>Hola: ${name}, por medio de este correo te enviamos tu usuario y contraseña</p>
           <p>Recuerda que no debes compartir estos datos con nadie. 
         <ul>
-          <li>  Email: ${emailGenerated} </li>
+          <li>  Email: ${ email} </li>
           <li>  Password: ${password} </li>
         </ul>
 
@@ -64,13 +64,13 @@ const emailRegistro = async (datos) => {
       // Correo para estudiantes
       await transport.sendMail({
         from: '"Intranet - Comunidad Educativa de Villa Dulce" <cuentas@uptask.com>',
-        to: emailRecovery,
+        to:recoveryEmail,
         subject: `Bienvenido Director al equipo educativo ${name}, con este correo podrás acceder al intranet `,
         text: "Aquí tienes mas información",
         html: `<p>Hola: ${name}, por medio de este correo te enviamos tu usuario y contraseña</p>
           <p>Recuerda que no debes compartir estos datos con nadie. 
         <ul>
-          <li>  Email: ${emailGenerated} </li>
+          <li>  Email: ${ email} </li>
           <li>  Password: ${password} </li>
         </ul>
 
@@ -91,13 +91,13 @@ const emailRegistro = async (datos) => {
         // Correo para estudiantes
         await transport.sendMail({
           from: '"Intranet - Comunidad Educativa de Villa Dulce" <cuentas@uptask.com>',
-          to: emailRecovery,
+          to: recoveryEmail,
           subject: `Bienvenido Coordinador al equipo educativo ${name}, con este correo podrás acceder al intranet `,
           text: "Aquí tienes mas información",
           html: `<p>Hola: ${name}, por medio de este correo te enviamos tu usuario y contraseña</p>
             <p>Recuerda que no debes compartir estos datos con nadie. 
           <ul>
-            <li>  Email: ${emailGenerated} </li>
+            <li>  Email: ${email} </li>
             <li>  Password: ${password} </li>
           </ul>
   
