@@ -44,7 +44,7 @@ const createAdmin = async (_, { input }) => {
   const salt = await bcryptjs.genSalt(10);
 
   input.password = await bcryptjs.hash(password, salt);
-  input.rol= "ADMIN";
+  input.rol = "ADMIN";
 
   try {
     const admin = new User(input);
@@ -75,18 +75,10 @@ const authUser = async (_, { input }) => {
   };
 };
 
-
 // ? Creación de Usuarios
 const createUser = async (_, { input }, ctx) => {
   const { user } = ctx;
-  const {
-    recoveryEmail,
-    totalHours,
-    name,
-    lastName,
-    run,
-    rol,
-  } = input;
+  const { recoveryEmail, totalHours, name, lastName, run, rol } = input;
 
   let salary = 0;
 
@@ -112,73 +104,68 @@ const createUser = async (_, { input }, ctx) => {
 
   //Creamos el usuario
   const newUser = new User(input);
- 
+
   newUser.password = await bcryptjs.hash(secretPassword, salt);
   newUser.rol = rol;
-  newUser.email = email
+  newUser.email = email;
 
-   //salario
-   if(rol !== "STUDENT"){
+  //salario
+  if (rol !== "STUDENT") {
     salary = await calculateSalary(totalHours, rol);
-  
-  };
- 
-  newUser.salary = salary
-  console.log(newUser)
+  }
+
+  newUser.salary = salary;
+  console.log(newUser);
 
   try {
-  const result =  await newUser.save();
+    const result = await newUser.save();
 
-   emailRegistro({
-    email,
-    recoveryEmail,
-    password: secretPassword,
-    name,
-    rol: rol,
-  });
+    emailRegistro({
+      email,
+      recoveryEmail,
+      password: secretPassword,
+      name,
+      rol: rol,
+    });
 
-  return result;
+    return result;
   } catch (error) {
     console.log(error);
   }
 };
 
-const disableUser = async (_, { id }, ctx) =>{
-  const {user} = ctx;
+const disableUser = async (_, { id }, ctx) => {
+  const { user } = ctx;
 
   if (!user) {
     throw new Error("Acción no permitida.");
   }
 
   // TODO agregar otros usuarios, coordinador y admin
-  if (user.rol !== "PRINCIPAL") {
+  if (user.rol !== "ADMIN") {
     throw new Error("No cuentas con los permisos.");
   }
 
   const activeUser = await User.findById(id);
 
-  if(!activeUser){
-    throw new Error("El usuario que intentas desactivar no existe.") 
+  if (!activeUser) {
+    throw new Error("El usuario que intentas desactivar no existe.");
   }
 
-  activeUser.isActive =  !activeUser.isActive;
+  activeUser.isActive = !activeUser.isActive;
 
   //TODO: Validar que no pueda desactivar a otros directores, coordinadordes o addmins.
 
-try {
-   await activeUser.save();
-   return activeUser;
-} catch (error) {
-  console.log(error)
-}
-
-
-}
-
-
+  try {
+    await activeUser.save();
+    return activeUser;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   createUser,
   authUser,
-  disableUser
+  disableUser,
 };

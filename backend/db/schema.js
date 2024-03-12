@@ -18,7 +18,7 @@ const typeDefs = gql`
     assists: Boolean
     phone: Int
     gender: genderType
-    grade: Grade
+    grade: ID
     subjects: [Subject]
     califications: Int
    annotations: [Annotation]
@@ -26,11 +26,12 @@ const typeDefs = gql`
 
   type Grade {
     id: ID
-    name: String
+    name: gradeLvl
     maxStudent: Int
     minStudent: Int
-    seccion: Seccion
-    headerTeacher: User
+    seccion: seccion
+    fullName: String
+    headerTeacher: ID
     students: [User]
     subjects: [Subject]
   }
@@ -60,7 +61,18 @@ const typeDefs = gql`
     ASSITANCE
   }
 
-  enum Seccion {
+  #Hacer que sea dinámico
+  enum gradeLvl {
+    PRIMERO
+    SEGUNDO
+    TERCERO
+    CUARTO
+    PRIMERO_MEDIO
+
+  }
+
+  #Hacer que sea dinámico
+  enum seccion {
     A
     B
     C
@@ -106,7 +118,17 @@ const typeDefs = gql`
     # TODO AGREGAR CALIFICACIONES, ASISTENCIA, ANOTACIONES, CURSOS, ASIGNATURAS
   }
 
-  
+  input GradeInput {
+    name: gradeLvl!
+    fullName: String
+    maxStudent: Int!
+    minStudent: Int!
+    seccion: seccion!
+    headerTeacher: ID!
+    students: [ID]
+    subjects: [ID]
+  }
+
 
 
   input AuthInput {
@@ -125,6 +147,9 @@ const typeDefs = gql`
     #Mantenedor usuarios
     createUser(input:  UserInput): User
     disableUser(id: ID): User
+
+    #Mantenedor de cursos
+    createGrade(input: GradeInput): Grade
   }
 `;
 

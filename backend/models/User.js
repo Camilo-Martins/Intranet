@@ -17,6 +17,10 @@ const adminsSchema = mongoose.Schema({
         trim: true,
         unique: true
     },
+    grade:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Grade"
+    },
     password:{
         type: String,
         required: true,
