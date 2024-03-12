@@ -11,6 +11,10 @@ const gradeSchema = mongoose.Schema({
         required: true,
         trim: true
     },
+    studentsQuantity:{
+        type: Number,
+        default: 0
+    },
     minStudent:{
         type: Number,
         required: true

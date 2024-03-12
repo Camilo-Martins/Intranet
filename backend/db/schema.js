@@ -29,6 +29,7 @@ const typeDefs = gql`
     name: gradeLvl
     maxStudent: Int
     minStudent: Int
+    studentsQuantity: Int
     seccion: seccion
     fullName: String
     headerTeacher: ID
@@ -54,6 +55,10 @@ const typeDefs = gql`
     annotationType: annotationType
   }
 
+  type GradeInfo{
+    gradeName: String
+    studentsQuantity: Int
+  }
 
   enum annotationType {
     POSITIVE
@@ -125,10 +130,13 @@ const typeDefs = gql`
     minStudent: Int!
     seccion: seccion!
     headerTeacher: ID!
-    students: [ID]
     subjects: [ID]
+    studentsQuantity: Int
   }
 
+  input AssingStudentInput{
+    students: [ID]
+  }
 
 
   input AuthInput {
@@ -150,6 +158,7 @@ const typeDefs = gql`
 
     #Mantenedor de cursos
     createGrade(input: GradeInput): Grade
+    assingStudents(id: ID!, input: AssingStudentInput): Grade
   }
 `;
 
