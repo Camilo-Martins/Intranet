@@ -65,6 +65,12 @@ const adminsSchema = mongoose.Schema({
         type: String,
         default: "NONE"
     },
+    subjects: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Subject"
+        }
+    ],
     occupation:{
         type: String,
         default: "No especifica"

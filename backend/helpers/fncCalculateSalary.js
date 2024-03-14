@@ -1,27 +1,24 @@
-function calculateSalary(totalHours,  rol) {
+function fncCalculateSalary(totalHours, rol) {
   // ? El calculo del salario es:
   // ? (Total de horas * valor hora) + gratificación segun el rol
   // ? Directo 40% del salario, Coordinador 28% y Docente 20%
- 
 
   let salary = 0;
   let hoursValue = 0;
 
- 
-
   switch (rol) {
     case "PRINCIPAL":
-        hoursValue = 6000;
+      hoursValue = 6000;
       return (salary = totalHours * hoursValue * 1.2);
     case "COORDINATOR":
-        hoursValue = 5200;
+      hoursValue = 5200;
       return (salary = totalHours * hoursValue * 1.17);
     case "TEACHER":
-        hoursValue = 4600;
+      hoursValue = 4600;
       return (salary = totalHours * hoursValue * 1.15);
     default:
       break;
   }
 }
 
-module.exports = calculateSalary;
+module.exports = fncCalculateSalary;

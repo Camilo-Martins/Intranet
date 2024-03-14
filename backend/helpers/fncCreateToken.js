@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-const createToken = (user, word, exp) => {
+const fncCreateToken = (user, word, exp) => {
   const { id, email, name, lastName, rol, run } = user;
 
   return jwt.sign(
@@ -20,4 +20,4 @@ const createToken = (user, word, exp) => {
   );
 };
 
-module.exports = createToken;
+module.exports = fncCreateToken;

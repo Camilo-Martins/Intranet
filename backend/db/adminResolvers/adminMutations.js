@@ -2,12 +2,15 @@ const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const validator = require("email-validator");
 
-const User = require("../../models/User");
+const { User } = require("../../models/index");
 
-const createToken = require("../../helpers/createToken");
-const emailRegistro = require("../../helpers/generateEmail");
-const generatePass = require("../../helpers/generateRandomPass");
-const calculateSalary = require("../../helpers/calculateSalary");
+const {
+  fncCreateToken,
+  fncGenerateEmail,
+  fncGeneratePass,
+  fncCalculateSalary,
+  fncValidateSesion
+} = require("../../helpers/index");
 
 // ? Creación de Adminstrador
 const createAdmin = async (_, { input }) => {
@@ -71,7 +74,7 @@ const authUser = async (_, { input }) => {
   }
 
   return {
-    token: createToken(isUser, process.env.SECRET, "24H"),
+    token: fncCreateToken(isUser, process.env.SECRET, "24H"),
   };
 };
 
@@ -79,16 +82,15 @@ const authUser = async (_, { input }) => {
 const createUser = async (_, { input }, ctx) => {
   const { user } = ctx;
   const { recoveryEmail, totalHours, name, lastName, run, rol } = input;
+  const isValidRol = ["ADMIN", "PRINCIPAL", "COORDINATOR"];
+
+  //1.- Validaciones de sesión y rol
+  if (fncValidateSesion(user, isValidRol)) {
+    return error.message;
+  }
 
   let salary = 0;
 
-  if (!user) {
-    throw new Error("Acción no permitida.");
-  }
-
-  if (user.rol !== "ADMIN") {
-    throw new Error("No cuentas con los permisos.");
-  }
   //Validar que el usuario no esté registrado
   const isUser = await User.findOne({ run });
   if (isUser) {
@@ -96,7 +98,7 @@ const createUser = async (_, { input }, ctx) => {
   }
 
   //generamos y hasheamos
-  const secretPassword = await generatePass();
+  const secretPassword = await fncGeneratePass();
   const salt = await bcryptjs.genSalt(10);
 
   //email corporativo
@@ -111,16 +113,15 @@ const createUser = async (_, { input }, ctx) => {
 
   //salario
   if (rol !== "STUDENT") {
-    salary = await calculateSalary(totalHours, rol);
+    salary = await fncCalculateSalary(totalHours, rol);
   }
 
   newUser.salary = salary;
-  console.log(newUser);
 
   try {
     const result = await newUser.save();
 
-    emailRegistro({
+    fncGenerateEmail({
       email,
       recoveryEmail,
       password: secretPassword,
@@ -136,14 +137,10 @@ const createUser = async (_, { input }, ctx) => {
 
 const disableUser = async (_, { id }, ctx) => {
   const { user } = ctx;
-
-  if (!user) {
-    throw new Error("Acción no permitida.");
-  }
-
-  // TODO agregar otros usuarios, coordinador y admin
-  if (user.rol !== "ADMIN") {
-    throw new Error("No cuentas con los permisos.");
+  const isValidRol = ["ADMIN", "PRINCIPAL", "COORDINATOR"];
+  //1.- Validaciones de sesión y rol
+  if (fncValidateSesion(user, isValidRol)) {
+    return error.message;
   }
 
   const activeUser = await User.findById(id);
@@ -165,6 +162,7 @@ const disableUser = async (_, { id }, ctx) => {
 };
 
 module.exports = {
+  createAdmin,
   createUser,
   authUser,
   disableUser,

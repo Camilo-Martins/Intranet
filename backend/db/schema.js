@@ -1,6 +1,14 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+  #ÍNDICE
+  #TYPE'S
+  #ENUMS'S
+  #INPUT'S
+  #TYPE'S QUERY
+  #TYPE'S MUTATION
+
+
   type User {
     id: ID
     name: String
@@ -76,6 +84,14 @@ const typeDefs = gql`
 
   }
 
+  enum subjectName{
+    MATEMATICA
+    MUSICA
+    HISTORIA
+    FISICA
+    QUIMICA
+  }
+
   #Hacer que sea dinámico
   enum seccion {
     A
@@ -138,10 +154,21 @@ const typeDefs = gql`
     students: [ID]
   }
 
+  input AssingSubjects{
+    subject: ID!
+    name: String
+    teacher: ID!
+    students: [ID]!
+  }
 
   input AuthInput {
     email: String!
     password: String!
+  }
+
+  input SubjectIput{
+    name: String!
+    teacher: ID
   }
 
   type Query {
@@ -159,6 +186,11 @@ const typeDefs = gql`
     #Mantenedor de cursos
     createGrade(input: GradeInput): Grade
     assingStudents(id: ID!, input: AssingStudentInput): Grade
+
+    #Mantenedor asignaturas
+    createSubject(id: ID!, input: SubjectIput): Grade
+    unassingSubject(id: ID!, idSubject: ID!): Grade
+
   }
 `;
 

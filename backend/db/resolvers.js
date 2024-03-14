@@ -1,5 +1,6 @@
 const adminMutations = require("./adminResolvers/adminMutations");
 const gradeMutations = require("./gradeResolvers/gradeMutation");
+const subjectMutations = require("./subjectResolvers/subjectMutation")
 const adminQuerys = require("./adminResolvers/adminQuerys");
 
 const resolvers = {
@@ -8,8 +9,8 @@ const resolvers = {
   },
   Mutation: {
     ...gradeMutations,
-    ...adminMutations
-    
+    ...adminMutations,
+    ...subjectMutations
   },
 };
 

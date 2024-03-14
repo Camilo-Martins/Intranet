@@ -38,6 +38,12 @@ const gradeSchema = mongoose.Schema({
             ref: "User"
         }
     ],
+    subjects:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Subject"
+        }
+    ],
     create:{
         type: Date,
         default: Date.now()

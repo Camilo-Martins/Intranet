@@ -1,4 +1,4 @@
-function generatePass() {
+function fncGeneratePass() {
     let pass = "";
     let str =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
@@ -12,4 +12,4 @@ function generatePass() {
     return pass;
   }
 
-  module.exports = generatePass;
+  module.exports = fncGeneratePass;

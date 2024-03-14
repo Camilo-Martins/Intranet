@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config({ path: "variables.env" });
 
-const emailRegistro = async (datos) => {
+const fncGenerateEmail = async (datos) => {
   const { email,  recoveryEmail, name, token, password, rol } = datos;
   console.log(datos)
 
@@ -118,4 +118,4 @@ const emailRegistro = async (datos) => {
   }
 };
 
-module.exports = emailRegistro;
+module.exports = fncGenerateEmail;
