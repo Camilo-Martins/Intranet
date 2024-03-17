@@ -7,7 +7,7 @@ const {fncValidateID, fncValidateSesion} = require("../../helpers/index")
 const createGrade = async (_, { input }, ctx) => {
   const { user } = ctx;
   const { headerTeacher, name, seccion, minStudent, maxStudent } = input;
-  const isValidRol = ["PRINCIPAL", "COORDINATOR"];
+  const isValidRol = ["ADMIN", "PRINCIPAL", "COORDINATOR"];
  
    //1.- Validaciones de sesión y rol
    if (fncValidateSesion(user, isValidRol)) {

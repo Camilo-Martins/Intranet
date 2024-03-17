@@ -8,6 +8,9 @@ const typeDefs = gql`
   #TYPE'S QUERY
   #TYPE'S MUTATION
 
+  type Token {
+    token: String
+  }
 
   type User {
     id: ID
@@ -117,9 +120,7 @@ const typeDefs = gql`
     NONE
   }
  
-  type Token {
-    token: String
-  }
+ 
 
   input UserInput {
     name: String!
@@ -190,6 +191,7 @@ const typeDefs = gql`
     #Mantenedor asignaturas
     createSubject(id: ID!, input: SubjectIput): Grade
     unassingSubject(id: ID!, idSubject: ID!): Grade
+    assingSubjectStudents(id: ID!, input: AssingStudentInput): Subject
 
   }
 `;

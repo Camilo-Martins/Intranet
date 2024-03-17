@@ -53,9 +53,81 @@ const createSubject = async (__, { id, input }, ctx) => {
   }
 };
 
+// ? Asignación de estudiantes: Solo los directores y coordinadores pueden asignar estudiantes.
+const assingSubjectStudents = async (_, { id, input }, ctx) => {
+  const { user } = ctx;
+  const { students } = input;
+  const isValidRol = ["PRINCIPAL", "COORDINATOR"];
+  //1.- Validaciones de sesión y rol
+  if (fncValidateSesion(user, isValidRol)) {
+    return error.message;
+  }
+
+  //2.- Valida ID de la asignatura
+  if (fncValidateID(id)) {
+    return error.message;
+  }
+
+  const isSubject = await Subject.findById(id).populate("grade", "students");
+  const {grade} = isSubject;
+  if (!isSubject) {
+    throw new Error("La asignatura no fue encontrada.");
+  }
+
+  //3.- Validaciones estudiantes
+  //3.1.- El usuario debe tener el rol estudiante
+  //3.2.- Debe pertenecer el Curso
+  //3.3.- No debe estar registrado en la misma asignatura 2 veces o más.
+  const studentPromises = students.map(async (studentId) => {
+    try {
+      const student = await User.findById(studentId);
+      const { name,  rol } = student;
+
+      if (!grade.students.includes(studentId)) {
+        throw new Error("El estudiante no pertenece al curso.");
+      }
+
+      if (rol !== "STUDENT") {
+        throw new Error(
+          `El usuario ${name} no tiene el rol correcto (STUDENT).`
+        );
+      }
+
+      if (isSubject.students.includes(studentId)) {
+        throw new Error(
+          `El estudiante ${name} ya se encuentra en esta asignatura.`
+        );
+      }
+
+       //4.- Agregamos los estudiantes en la asignatura
+       isSubject.students.push(studentId)
+
+       //5.- Agregamos los nuevos estudiantes en el Array de students y validamos el máximo del curso
+       student.subjects.push(id);
+       
+       await Promise.allSettled([isSubject.save(), student.save()]);
+      
+    } catch (error) {
+      throw new Error(
+        `Error al procesar el estudiante con ID ${studentId}: ${error.message}`
+      );
+    }
+  });
+
+  try {
+    await Promise.all(studentPromises);
+
+    //6.- Si todo va bien, guardamos el Curso y retornamos el curso con los estudiantes agregados.
+    return isSubject.populate("students")
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const unassingSubject = async (__, { input }, ctx) => {};
 
 module.exports = {
   createSubject,
   unassingSubject,
+  assingSubjectStudents,
 };
