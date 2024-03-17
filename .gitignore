@@ -46,6 +46,7 @@ app/.DS_Store
 
 # Xcode
 #
+app/android/app/debug.keystore
 app/build/
 app/*.pbxuser
 app/!default.pbxuser
