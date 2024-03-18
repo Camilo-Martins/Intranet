@@ -71,6 +71,7 @@ const createGrade = async (_, { input }, ctx) => {
     return result;
   } catch (error) {
     console.log(error.message);
+    throw new Error(`Hubo un problema: ${error.message}`)
   }
 };
 
@@ -121,7 +122,7 @@ const assingStudents = async (_, { id, input }, ctx) => {
       }
 
       //5.- Agregamos los nuevos estudiantes en el Array de students y validamos el máximo del curso
-      isGrade.students = [...isGrade.students, studentId];
+      isGrade.students.push(studentId);
       if (isGrade.students.length > maxStudent) {
         throw new Error(`
           El Curso ${fullName} ha alcanzo su capacidad máxima. Agregue al estudiante ${name} a otro curso.
@@ -147,134 +148,9 @@ const assingStudents = async (_, { id, input }, ctx) => {
     return isGrade.populate("students");
   } catch (error) {
     console.error(error.message);
+    throw new Error(`Hubo un error: ${error.message}`)
   }
 };
-
-/* // ? Creación de asignaturas: Solo los directores y coordinadores pueden crear estudiantes.
-const assingSubject = async (_, { id, input }, ctx) => {
-  const { user } = ctx;
-  const { subject, name, teacher } = input;
-
-  //1.- Validaciones de sesión y rol
-  if (!user || user.rol !== "PRINCIPAL") {
-    throw new Error("Sesión caducada o no autorizada.");
-  }
-
-  //2.- Verificar id del Curso
-  const isValidID = mongoose.isValidObjectId(id);
-  if (!isValidID) {
-    throw new Error("El ID del Curso no es válido.");
-  }
-
-  //3.- Validar que no exista la asignatura en el curso.
-  const isGrade = await Grade.findById(id);
-  if(isGrade.subjects.includes(subject)){
-    throw new Error(`La asignatura ya está ingresada en el curso.`)
-  }
-
-  //4.- Validar que la asignatura sea válida.
-  const isSubject = await Subject.findById(subject)
-  if(!isSubject){
-    throw new Error("La asignatura que intentas agregar no existe.")
-  }
-
-  //5.- Validar que el docente no esté asignado a otro curso.
-  // .- Se puede modificar a futuro, pero ahora se validará así.
-  const isTeacher = await User.findById(teacher)
-  if(isTeacher.subjects && isTeacher.subjects.length > 0 ){
-    throw new Error(`El docente ya tiene una asignatura.`)
-  }
-
-  // Agregar asignatura al curso
-  isGrade.subjects.push(subject);
-
-  // Guardar cambios en el curso
-  await isGrade.save();
-
-
-
-/*   //6.- Validar que el estudiante corresponda al curso
-  const studentPromises = students.map(async (studentId) => {
-    try {
-      const student = await User.findById(studentId);
-      const { name, grade, rol } = student;
-
-      if (!grade) {
-        throw new Error(
-          `El estudiante ${name} no forma parte del curso.`
-        );
-      }
-
-      if(student.subjects.includes(subject)){
-        throw new Error(
-          `
-            El estudiante ${name} ya se encuentra en la asignatura.
-          `
-        )
-      }
-
-      //7.- Agregamos los estudiantes en la asignatura
-      isSubject.students = [...isSubject.students, studentId]
-
-      //8.- Agregamos los nuevos estudiantes en el Array de students y validamos el máximo del curso
-      student.subjects = [...student.subjects, subject];
-      
-      await isSubject.save();
-      await student.save();
-    } catch (error) {
-      throw new Error(
-        `Error al procesar el estudiante con ID ${studentId}: ${error.message}`
-      );
-    }
-  });
-  
-  isGrade.subjects = [...isGrade.subjects, subject]
-
-  try {
-    await Promise.all(studentPromises);
-    
-    //6.- Si todo va bien, guardamos el Curso y retornamos el curso con los estudiantes agregados.
-    await isGrade.save();
-    return isGrade.populate("students");
-  } catch (error) {
-    console.error(error.message);
-  } */
-
- /*  // Validar y procesar estudiantes
-  const processStudent = async (studentId) => {
-    const student = await User.findById(studentId);
-    const { name, grade, subjects } = student;
-
-    if (!grade) {
-      throw new Error(`El estudiante ${name} no forma parte del curso.`);
-    }
-
-    if (subjects.includes(subject)) {
-      throw new Error(`El estudiante ${name} ya se encuentra en la asignatura.`);
-    }
-
-    //Pasarlo al input del new Subject
-    isSubject.students.push(studentId);
-    student.subjects.push(subject);
-
-    await Promise.all([isSubject.save(), student.save()]);
-  };
-
-  // Procesar estudiantes en paralelo
-  await Promise.all(students.map(processStudent));
-
-  // Agregar asignatura al curso
-  isGrade.subjects.push(subject);
-
-  // Guardar cambios en el curso
-  await isGrade.save();
-
-  // Retornar el curso con los estudiantes agregados
-  const newSubject = await new Subject(input)
-
-  return isGrade.populate("students"); */
-
- 
 
 module.exports = {
   createGrade,

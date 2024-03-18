@@ -31,8 +31,8 @@ const typeDefs = gql`
     gender: genderType
     grade: ID
     subjects: [Subject]
-    califications: Int
-   annotations: [Annotation]
+    califications: [ID]
+    annotations: [Annotation]
   }
 
   type Grade {
@@ -54,7 +54,15 @@ const typeDefs = gql`
     teacher: User
     students: [User]
     totalHours: Int
-    califications: [User]
+  }
+
+  type Calification{
+    id: ID
+    student: ID
+    subject: ID
+    name: String
+    create: String
+    value: Float
   }
 
   type Annotation {
@@ -172,6 +180,13 @@ const typeDefs = gql`
     teacher: ID
   }
 
+  input CalificationInput{
+    subject: ID
+    students: [ID]
+    name: String
+    value: Int
+  }
+
   type Query {
     getToken: User
   }
@@ -192,7 +207,7 @@ const typeDefs = gql`
     createSubject(id: ID!, input: SubjectIput): Grade
     unassingSubject(id: ID!, idSubject: ID!): Grade
     assingSubjectStudents(id: ID!, input: AssingStudentInput): Subject
-
+    createCalification(id: ID!, input: CalificationInput): Subject
   }
 `;
 

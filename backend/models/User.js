@@ -71,6 +71,12 @@ const adminsSchema = mongoose.Schema({
             ref: "Subject"
         }
     ],
+    califications: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Calification"
+        }
+    ],
     occupation:{
         type: String,
         default: "No especifica"

@@ -16,6 +16,12 @@ const subjectsSchema = mongoose.Schema({
         require: true,
         ref: "User"
     },
+    califications: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Calification"
+        }
+    ],
     students: [
         {
             type: mongoose.Schema.Types.ObjectId,

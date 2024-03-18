@@ -55,6 +55,7 @@ const createAdmin = async (_, { input }) => {
     return admin;
   } catch (error) {
     console.log(error);
+    throw new Error(`Error al registrar usuario ${error.message}`)
   }
 };
 
@@ -132,6 +133,7 @@ const createUser = async (_, { input }, ctx) => {
     return result;
   } catch (error) {
     console.log(error);
+    throw new Error(`Error al registrar usuario: ${error.message}`)
   }
 };
 
@@ -149,15 +151,19 @@ const disableUser = async (_, { id }, ctx) => {
     throw new Error("El usuario que intentas desactivar no existe.");
   }
 
+  if(activeUser.rol.includes(isValidRol)){
+    throw new Error(`Solo puedes desactivar a profesores y alumnos`)
+  }
+
   activeUser.isActive = !activeUser.isActive;
 
-  //TODO: Validar que no pueda desactivar a otros directores, coordinadordes o addmins.
 
   try {
     await activeUser.save();
     return activeUser;
   } catch (error) {
     console.log(error);
+    throw new Error(`Hubo un problema: ${error.message}`)
   }
 };
 
