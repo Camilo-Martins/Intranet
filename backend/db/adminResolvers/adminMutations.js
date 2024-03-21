@@ -115,9 +115,8 @@ const createUser = async (_, { input }, ctx) => {
   //salario
   if (rol !== "STUDENT") {
     salary = await fncCalculateSalary(totalHours, rol);
+    newUser.salary = salary;
   }
-
-  newUser.salary = salary;
 
   try {
     const result = await newUser.save();

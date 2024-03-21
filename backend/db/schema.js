@@ -29,9 +29,9 @@ const typeDefs = gql`
     assists: Boolean
     phone: Int
     gender: genderType
-    grade: ID
+    grade: Grade
     subjects: [Subject]
-    califications: [ID]
+    califications: [Calification]
     annotations: [Annotation]
   }
 
@@ -77,6 +77,18 @@ const typeDefs = gql`
   type GradeInfo{
     gradeName: String
     studentsQuantity: Int
+  }
+
+  type StudentInto {
+    student: User
+    grade: Grade
+    subjects: [Subject]
+    califications: [Calification]
+  }
+
+
+  type SubjectCalification{
+    user: User
   }
 
   enum annotationType {
@@ -189,6 +201,8 @@ const typeDefs = gql`
 
   type Query {
     getToken: User
+    getCalificationByGrade: User
+
   }
 
   type Mutation {

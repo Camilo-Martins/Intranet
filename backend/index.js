@@ -14,27 +14,23 @@ const server = new ApolloServer({
     let token;
     token = req.headers["authorization"];
 
-    if (!token) {
-     return "Token has been expired."
-    } 
+    if (token) {
+      if (token.startsWith("Bearer")) {
+        token = req.headers["authorization"].split(" ")[1] || "";
+      }
 
-    if (token.startsWith("Bearer")) {
-      token = req.headers["authorization"].split(" ")[1] || "";
+      try {
+        const user = jwt.verify(token, process.env.SECRET);
+
+        return {
+          user,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("esto no debe pasar");
     }
-    
-    try {
-      const user = jwt.verify(
-        token,
-        process.env.SECRET
-      );
-
-      return {
-        user,
-      };
-    } catch (error) {
-      console.log(error);
-    }
-
   },
 });
 
